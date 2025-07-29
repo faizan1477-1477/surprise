@@ -164,12 +164,41 @@ anime({
     duration: 3200, direction: 'alternate', loop: true, easing: 'easeInOutQuad'
 });
 
-// Init
-document.addEventListener('DOMContentLoaded', () => { 
-    initThreeJS(); 
-    document.querySelector('.step.active .btn')?.focus(); 
+document.addEventListener('DOMContentLoaded', () => {
+    const themes = [
+        'shiny-black',
+        'pastel-dream',
+        'ocean-breeze',
+        'sunset-glow',
+        'enchanted-forest',
+        'starlight'
+    ];
+    let currentThemeIndex = 0;
 
-    // Personalization
+    const preloader = document.getElementById('preloader');
+    const app = document.getElementById('app');
+    const themeSwitcher = document.getElementById('theme-switcher');
+
+    // --- THEME MANAGEMENT ---
+    function setTheme(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+    }
+
+    themeSwitcher.addEventListener('click', () => {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        setTheme(themes[currentThemeIndex]);
+    });
+
+    // Set initial theme
+    setTheme(themes[currentThemeIndex]);
+
+    // --- PRELOADER ---
+    window.addEventListener('load', () => {
+        gsap.to(preloader, { opacity: 0, duration: 0.5, onComplete: () => preloader.style.display = 'none' });
+        gsap.from(app, { opacity: 0, duration: 1, delay: 0.5 });
+    });
+
+    // --- PERSONALIZATION ---
     const birthdayName = prompt("Who is this birthday card for?", "ASHRA");
     const creatorName = prompt("Who is this card from?", "You");
 
@@ -179,4 +208,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (creatorName) {
         document.getElementById('creator-name').textContent = creatorName;
     }
+
+    initThreeJS();
+    document.querySelector('.step.active .btn')?.focus();
 });
+
+// The rest of the script remains the same...
